@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,44 +10,99 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
     <header class="site-header">
         <div class="container">
             <a href="#profile" class="brand">Stephanie</a>
             <nav>
-                <a href="#profile">Profile</a>
+                <a href="#home">Home</a>
+                <a href="#about">About Me</a>
+                <a href="#content-tabs">Education & Skills</a>
+                <a href="#projects">Values</a>
             </nav>
         </div>
     </header>
 
     <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>Stephanie Revalina Tamus</h1>
+        <!-- HERO SECTION -->
+        <section class="hero" id="home">
+            <div class="container hero-content">
+                <div class="hero-title">
+                    <span class="badge-cheerful">✨ Hello world, welcome!</span>
+                    <h1>Hi, I'm Stephanie! 👋</h1>
+                    <p class="subtitle">Computer Science Student & Teaching Assistant at Fasilkom UI</p>
                 </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/images.png" alt="Photo of Burhan">
+
+                <div class="hero-image-wrapper">
+                    <img src="/static/img/images.png" alt="Stephanie" class="hero-avatar">
                 </div>
-                <div class="hero-details">
-                    <p class="bio">CS student at Universitas Indonesia for longer than planned, now a familiar (and slightly dreaded) face among Fasilkom students as a teaching assistant across several courses.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
+
+                <div class="hero-action">
+                    <p class="hero-desc">
+                        Navigating CS life with curiosity, lots of iced coffee, and a genuine love for logic. Always up
+                        for solving puzzles, helping others learn, and making web dev fun!
+                    </p>
+                    <a href="#values" class="btn-primary">Explore My Vibe &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT ME SECTION -->
+        <section class="about-section" id="about">
+            <div class="container">
+                <h2 class="section-title">A Bit About Me 🌟</h2>
+                <div class="about-card">
+                    <p class="bio-text">
+                        I'm a CS student at Universitas Indonesia who somehow spends more time explaining code as a
+                        Teaching Assistant than writing it! I love figuring out how things work under the hood, building
+                        clean tools, and learning together without taking things too seriously.
+                    </p>
+                    <dl class="meta-grid">
+                        <div class="meta-item">
                             <dt>NPM</dt>
                             <dd>2506547153</dd>
                         </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
+                        <div class="meta-item">
+                            <dt>Degree Program</dt>
+                            <dd>B.Sc. in Computer Science</dd>
+                        </div>
+                        <div class="meta-item">
+                            <dt>Campus</dt>
+                            <dd>Fasilkom UI</dd>
                         </div>
                     </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/" class="social-link">GitHub</a>
-                        <a href="https://linkedin.com/" class="social-link">LinkedIn</a>
-                        <a href="mailto:tamusstephanie@gmail.com" class="social-link">Email</a>
-                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CORE VALUES SECTION -->
+        <section class="values-section" id="values">
+            <div class="container">
+                <h2 class="section-title">Things I Live By 🌈</h2>
+                <div class="values-grid">
+
+                    <article class="value-card card-teal">
+                        <span class="value-emoji">💡</span>
+                        <h3>Logic Over Shortcuts</h3>
+                        <p>Understanding the "why" behind every line of code is way more satisfying than just
+                            copy-pasting a quick fix.</p>
+                    </article>
+
+                    <article class="value-card card-yellow">
+                        <span class="value-emoji">🤝</span>
+                        <h3>Joy in Teaching</h3>
+                        <p>Teaching others isn't just about sharing answers—it's about making complex ideas feel
+                            approachable and fun!</p>
+                    </article>
+
+                    <article class="value-card card-coral">
+                        <span class="value-emoji">🧩</span>
+                        <h3>Embrace the Bugs</h3>
+                        <p>Treating code errors as interesting puzzles rather than frustrating roadblocks. Keep
+                            experimenting and learning!</p>
+                    </article>
+
                 </div>
             </div>
         </section>
@@ -54,8 +110,9 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Burhan. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <p>&copy; 2026 Stephanie. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
 </body>
+
 </html>

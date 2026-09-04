@@ -1,9 +1,15 @@
+/* *: universal selector (menargetkan semua elemen di web
+margin: 0 & padding: 0 untuk menghapus spasi bawaan browser agat layout rapi
+box-sizing: border box untuk memastikan perhitungan lebar/tinggi elemen sudah memperhitungkan 
+padding dan border, sehingga size elemen pas */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* :root temoat menyimpan variabel global(palette warna dan standar radius
+sisa di bawahnya ink, paper, accent dll untuk detail warna  yg digunakan */
 :root {
     --ink: #1c1917;
     --paper: #faf6f0;
@@ -14,6 +20,9 @@
     --radius: 4px;
 }
 
+/* styling tampilan dasar (body dan heading). font-family: mengatur jenis huruf bawaan sistem
+color & background color untuk mengatur warna teks utama dan warna latar belakang web
+line-height untuk atur jarak antar baris kalimat di web */
 body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--ink);
@@ -21,10 +30,14 @@ body {
     line-height: 1.6;
 }
 
-h1, .brand {
+/*khusus untuk h1, logo nama (.brand) gunakan font custom */
+h1,
+.brand {
     font-family: "Space Grotesk", -apple-system, sans-serif;
 }
 
+/* Layout uatama & Navigation bar (.container & site-header) max width (batasi lebar maksimal isi web agar tdk melebar ekstrim\
+margin: 0 auto untuk mengunci seluruh isi konten agar berada tepat di tengah layar*/
 .container {
     max-width: 960px;
     margin: 0 auto;
@@ -191,5 +204,38 @@ h1, .brand {
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    /* Badge ceria di atas judul */
+    .badge-cheerful {
+        display: inline-block;
+        background-color: var(--accent-yellow);
+        color: var(--ink);
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        margin-bottom: 0.75rem;
+        border: 1.5px solid var(--ink);
+    }
+
+    /* Emoji ukuran besar di Value Card */
+    .value-emoji {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Akses warna kartu yang variatif */
+    .card-teal:hover {
+        box-shadow: 6px 6px 0px var(--accent-teal);
+    }
+
+    .card-yellow:hover {
+        box-shadow: 6px 6px 0px var(--accent-yellow);
+    }
+
+    .card-coral:hover {
+        box-shadow: 6px 6px 0px var(--accent);
     }
 }
