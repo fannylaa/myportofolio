@@ -6,29 +6,40 @@ Kelas : PBP C
 
 ### Tugas 1
 
+## Reflective Questions (Week 1)
+
 ### 1. Penggunaan Elemen Semantik HTML5
-Ya, saya menggunakan elemen semantik HTML5 seperti `<header>`, `<nav>`, `<section>`, `<article>`, dan `<footer>` dalam merancang struktur website portofolio ini.
+**Apakah Anda menggunakan elemen semantik HTML5 seperti `<section>`, `<article>`, atau `<aside>`? Bagaimana elemen tersebut membantu dalam membuat static web?**
 
-Elemen semantik membantu pembuatan *static web* dalam beberapa hal:
-- Struktur Kode Lebih Terorganisir: Memudahkan pembacaan kode (readability) baik untuk pengembangan pribadi maupun kolaborasi tim, karena fungsi tiap area web terdefinisi dengan jelas dibanding hanya menggunakan `<div>` generik.
-- Aksesibilitas (Accessibility/a11y): Membantu *screen reader* membaca navigasi dan konten website secara logis untuk pengguna berkebutuhan khusus.
-- Optimasi SEO: Mesin pencari dapat memahami hierarki informasi dengan lebih baik (misalnya membedakan bagian navigasi utama, konten artikel, dan informasi *footer*).
+Ya, saya menggunakan elemen semantik HTML5 secara penuh dalam merancang struktur web portofolio ini, seperti `<header>`, `<main>`, `<section>`, dan `<article>`. 
 
-### 2. Responsivitas CSS & Evaluasi Tampilan Mobile
-Saat mengatur CSS agar responsif, tantangan tata letak utama yang dihadapi adalah:
-- Penyesuaian Grid/Flexbox Multi-Kolom: Mengubah tata letak samping-ke-samping (*side-by-side*) pada layar *desktop* menjadi tumpukan vertikal (*vertical stack*) pada layar *mobile* agar tidak terjadi *overflow* horizontal.
-- Skala Tipografi dan *Spacing*: Menjaga rasio *font-size*, *margin*, dan *padding* agar tetap proporsional dan tidak memakan terlalu banyak ruang pada layar kecil.
+Penggunaan elemen semantik sangat membantu dalam membuat static web karena:
+- **Kemudahan Navigasi dan Keterbacaan Kode**: Pengelompokan struktur menjadi jauh lebih jelas dibandingkan hanya menggunakan tumpukan `<div>`. Saya dan pengembang lain dapat langsung mengenali bagian mana yang berfungsi sebagai navigasi (`<header>`), konten utama (`<main>`), pengelompokan topik (`<section>`), hingga kartu informasi independen (`<article>`).
+- **Aksesibilitas dan SEO**: Elemen semantik membantu screen reader memahami hierarki informasi dengan baik bagi pengguna berkebutuhan khusus, serta memudahkan mesin pencari mengindeks bagian-bagian penting dari portofolio saya.
 
-**Cara Evaluasi & Prioritasi Elemen:**
-- Prioritas Konten (Content Hierarchy):Elemen penting seperti nama, perkenalan singkat, dan *call-to-action* (CTA) diprioritaskan muncul di bagian atas pada tampilan *mobile*. Elemen dekoratif atau pendukung digeser ke bawah.
-- Prinsip Mobile-First / Breakpoints: Menggunakan *media queries* `@media (max-width: ...)` untuk memantau titik di mana tata letak mulai terlihat sesak. Pada titik tersebut, elemen `flex-direction` diubah menjadi `column` dan ukuran kontainer disesuaikan menggunakan unit relatif (`%`, `vw`, atau `rem`).
+---
 
-### 3. Batasan Static Web & Rencana Fungsionalitas Dinamis
-Saat menyajikan informasi pada portofolio *static web* murni, terdapat beberapa batasan utama:
-- Data bersifat Statis (*Hardcoded*): Setiap perubahan daftar proyek, keahlian, atau pengalaman memerlukan suntingan langsung pada file `.html`.
-- Tidak Ada Interaksi Data Dua Arah: Pengunjung tidak dapat mengirim pesan langsung lewat *Contact Form*, meninggalkan komentar, atau berinteraksi secara real-time.
+### 2. Responsivitas CSS dan Evaluasi Tata Letak Mobile
+**Tantangan tata letak apa yang Anda temukan saat mengatur CSS agar responsive? Bagaimana Anda mengevaluasi elemen yang harus diubah posisinya atau diprioritaskan ukurannya dari desktop ke mobile?**
 
-**Fungsionalitas Dinamis yang Ingin Ditambahkan pada Iterasi Selanjutnya:**
-- Manajemen Konten via Database (Django Models): Menggunakan *database* untuk menyimpan data proyek, sertifikat, dan *experience*, sehingga konten dapat ditambah atau diubah secara dinamis melalui Django Admin tanpa menyentuh kode HTML.
-- Formulir Kontak Dinamis (*Contact Form*): Menambahkan logika *backend* untuk menangani *submit* formulir kontak, menyimpan pesan pengguna ke *database*, atau mengirimkan notifikasi email secara otomatis.
-- Sistem Autentikasi: Menyiapkan akses khusus pengguna/admin untuk mengelola portofolio secara dinamis langsung dari antarmuka web.
+**Tantangan Tata Letak:**
+Tantangan terbesar adalah menjaga keseimbangan visual dan konsistensi proporsi jarak (padding dan gap) saat beralih dari layar lebar ke layar yang lebih sempit, terutama pada bagian grid kartu (Core Values serta Background dan Skills) agar tidak terlihat terlalu padat atau gepeng.
+
+**Strategi Evaluasi dan Prioritas:**
+- **CSS Grid dan Flexbox Fluid**: Saya memanfaatkan fitur modern CSS seperti `grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));` yang memungkinkan elemen kartu beradaptasi secara otomatis dari banyak kolom di desktop menjadi satu kolom vertikal di layar mobile tanpa perlu membuat banyak media queries manual.
+- **Hierarki Konten Mobile**: Saat beralih ke layar mobile, elemen visual sekunder diberi proporsi yang lebih ringkas (misalnya ukuran hero avatar dikecilkan dan jarak padding disesuaikan) agar informasi teks utama seperti bio dan core values tetap menjadi fokus utama yang pertama kali dibaca oleh pengunjung.
+- **Penggunaan Typography Fluid**: Menggunakan fungsi `clamp()` pada judul utama agar ukuran teks membesar dan mengecil secara halus sesuai lebar viewport perangkat.
+
+---
+
+### 3. Batasan Static Web dan Rencana Fungsionalitas Dinamis
+**Batasan apa yang Anda rasakan saat menyajikan informasi secara static? Fungsionalitas dinamis apa yang ingin Anda tambahkan pada iterasi proyek selanjutnya?**
+
+**Batasan Static Web:**
+- **Pengelolaan Konten Manual**: Setiap kali ada penambahan data baru (seperti proyek baru, pengalaman, atau daftar keahlian), saya harus mengubah kode HTML secara langsung dan melakukan commit atau deploy ulang.
+- **Kurangnya Interaktivitas Pengunjung**: Website belum dapat menerima masukan atau interaksi dari pengunjung secara langsung, seperti formulir kontak yang mengirimkan pesan nyata atau fitur penyaring (filter) kategori keahlian.
+
+**Rencana Fungsionalitas Dinamis di Iterasi Selanjutnya:**
+- **Integrasi Database dan Django ORM**: Mengintegrasikan Model Django untuk menyimpan data proyek, keahlian, dan core values secara terpusat di database SQLite atau PostgreSQL.
+- **Dynamic Content Rendering**: Menggunakan Django Views dan Templates untuk melakukan looping data secara dinamis dari database ke template HTML.
+- **Interactive Contact Form**: Menyediakan formulir kontak dinamis yang memproses data input pengunjung melalui Django Forms dan menyimpannya ke database atau mengirimkannya via email.
