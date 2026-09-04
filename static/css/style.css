@@ -2,6 +2,10 @@
 margin: 0 & padding: 0 untuk menghapus spasi bawaan browser agat layout rapi
 box-sizing: border box untuk memastikan perhitungan lebar/tinggi elemen sudah memperhitungkan 
 padding dan border, sehingga size elemen pas */
+
+/* ==========================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
@@ -11,22 +15,38 @@ padding dan border, sehingga size elemen pas */
 /* :root temoat menyimpan variabel global(palette warna dan standar radius
 sisa di bawahnya ink, paper, accent dll untuk detail warna  yg digunakan */
 :root {
-    --ink: #1c1917;
-    --paper: #faf6f0;
-    --accent: #d95d39;
-    --accent-dark: #a8442a;
-    --line: #e3d9c9;
-    --text-muted: #6b6459;
-    --radius: 4px;
+    --ink: #1e1b18;           /* Charcoal lembut */
+    --paper: #fffdfa;         /* Cream hangat */
+    --accent: #ff6b6b;        /* Coral energik */
+    --accent-yellow: #ffd166; /* Yellow ceria */
+    --accent-teal: #4ecdc4;   /* Teal playful */
+    --accent-dark: #d95d39;
+    --line: #ebdccb;          /* Garis batas */
+    --text-muted: #6e655f;
+    --radius: 12px;           /* Sudut membulat */
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 /* styling tampilan dasar (body dan heading). font-family: mengatur jenis huruf bawaan sistem
 color & background color untuk mengatur warna teks utama dan warna latar belakang web
 line-height untuk atur jarak antar baris kalimat di web */
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background-color: var(--paper);
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255, 209, 102, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 80% 60%, rgba(78, 205, 196, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(255, 107, 107, 0.15) 0%, transparent 50%);
+    background-attachment: fixed;
+    color: var(--ink);
     line-height: 1.6;
 }
 
@@ -43,6 +63,17 @@ margin: 0 auto untuk mengunci seluruh isi konten agar berada tepat di tengah lay
     margin: 0 auto;
     padding: 0 1.5rem;
 }
+
+.section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.75rem;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+}
+
+/* ==========================================
+   2. SITE HEADER & NAVIGATION BAR
+   ========================================== */
 
 .site-header {
     border-bottom: 1px solid var(--line);
@@ -62,180 +93,273 @@ margin: 0 auto untuk mengunci seluruh isi konten agar berada tepat di tengah lay
     text-decoration: none;
 }
 
-.site-header nav {
+nav {
     display: flex;
-    gap: 2rem;
+    gap: 1.25rem;
 }
 
-.site-header nav a {
+nav a {
     color: var(--ink);
     text-decoration: none;
     font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
-.hero {
-    padding: 4.5rem 0 5rem;
+nav a:hover {
+    color: var(--accent);
 }
 
-.hero-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-areas:
-        "identity photo"
-        "details  photo";
-    gap: 1.5rem 3rem;
-}
-
-.hero-identity {
-    grid-area: identity;
-}
-
-.hero-details {
-    grid-area: details;
-}
-
-.hero-kicker {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent-dark);
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-}
-
-.hero-identity h1 {
-    font-size: clamp(3rem, 7vw, 5rem);
-    line-height: 0.95;
-}
-
-.bio {
-    color: var(--text-muted);
-    max-width: 480px;
-    margin-bottom: 1.5rem;
-}
-
-.meta-list {
+/* ==========================================
+   3. HERO SECTION STYLING
+   ========================================== */
+.hero-content {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3.5rem 0;
 }
 
-.meta-row dt {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 0.15rem;
-}
-
-.meta-row dd {
-    font-weight: 600;
-}
-
-.social-links {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.social-link {
+.badge-cheerful {
     display: inline-block;
+    background-color: var(--accent-yellow);
+    color: var(--ink);
     font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+    border: 1.5px solid var(--ink);
+}
+
+.hero-title h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+}
+
+.hero-title .subtitle {
+    font-size: 1.1rem;
+    color: var(--accent-dark);
     font-weight: 600;
-    text-decoration: none;
-    color: var(--paper);
-    background-color: var(--ink);
-    border-radius: var(--radius);
-    padding: 0.5rem 1.1rem;
-    transition: background-color 0.2s ease;
 }
 
-.social-link:hover {
-    background-color: var(--accent);
-}
-
-.hero-photo {
-    grid-area: photo;
-    align-self: center;
-    position: relative;
-}
-
-.photo-block {
-    position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
-    width: 100%;
-    height: 100%;
-    background-color: var(--accent);
-    border-radius: var(--radius);
-    z-index: 0;
-}
-
-.avatar {
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
+.hero-avatar {
+    width: 180px;
+    height: 180px;
     object-fit: cover;
-    border-radius: var(--radius);
+    border-radius: 50%;
     border: 3px solid var(--ink);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin: 1.5rem 0;
 }
 
-.site-footer {
-    padding: 1.5rem;
+.hero-desc {
     color: var(--text-muted);
-    font-size: 0.85rem;
+    max-width: 520px;
+    margin-bottom: 1.25rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--ink);
+    color: var(--paper);
+    padding: 0.75rem 1.75rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   4. ABOUT ME SECTION
+   ========================================== */
+.about-section {
+    padding: 4rem 0;
     border-top: 1px solid var(--line);
 }
 
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
+.about-card {
+    background: #ffffff;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 4px 4px 0px var(--ink);
+}
 
-    .hero-photo {
-        max-width: 220px;
-    }
+.bio-text {
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
 
-    .social-links {
-        justify-content: flex-start;
-    }
+.meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+}
 
-    /* Badge ceria di atas judul */
-    .badge-cheerful {
-        display: inline-block;
-        background-color: var(--accent-yellow);
-        color: var(--ink);
-        font-size: 0.85rem;
-        font-weight: 700;
-        padding: 0.3rem 0.8rem;
-        border-radius: 20px;
-        margin-bottom: 0.75rem;
-        border: 1.5px solid var(--ink);
-    }
+.meta-item dt {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
 
-    /* Emoji ukuran besar di Value Card */
-    .value-emoji {
-        font-size: 2rem;
-        display: block;
-        margin-bottom: 0.5rem;
-    }
+.meta-item dd {
+    font-weight: 700;
+    color: var(--ink);
+}
 
-    /* Akses warna kartu yang variatif */
-    .card-teal:hover {
-        box-shadow: 6px 6px 0px var(--accent-teal);
-    }
+/* ==========================================
+   5. CORE VALUES SECTION
+   ========================================== */
+.values-section {
+    padding: 4rem 0;
+    border-top: 1px solid var(--line);
+}
 
-    .card-yellow:hover {
-        box-shadow: 6px 6px 0px var(--accent-yellow);
-    }
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
 
-    .card-coral:hover {
-        box-shadow: 6px 6px 0px var(--accent);
-    }
+.value-card {
+    background: #ffffff;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    box-shadow: 4px 4px 0px var(--ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-3px);
+}
+
+.card-teal:hover { box-shadow: 6px 6px 0px var(--accent-teal); }
+.card-yellow:hover { box-shadow: 6px 6px 0px var(--accent-yellow); }
+.card-coral:hover { box-shadow: 6px 6px 0px var(--accent); }
+
+.value-emoji {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.value-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+}
+
+.value-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   6. DETAILS SECTION (EDUCATION, SKILLS, EXP)
+   ========================================== */
+.details-section {
+    padding: 4rem 0 5rem;
+    border-top: 1px solid var(--line);
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.detail-card {
+    background: #ffffff;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: 4px 4px 0px var(--ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.detail-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 0px var(--accent-teal);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px dashed var(--line);
+    padding-bottom: 0.75rem;
+}
+
+.card-icon {
+    font-size: 1.5rem;
+}
+
+.card-header h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+}
+
+.detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.detail-list li {
+    margin-bottom: 1.25rem;
+}
+
+.detail-list li:last-child {
+    margin-bottom: 0;
+}
+
+.detail-list strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1rem;
+}
+
+.sub-text {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin-top: 0.2rem;
+}
+
+.date-badge {
+    display: inline-block;
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    margin-top: 0.35rem;
+}
+
+.desc-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.5;
 }
