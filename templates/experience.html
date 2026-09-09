@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stephanie - Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+    <!-- Header navigasi utama yang ditempel di atas (sticky) supaya akses menu tetap gampang saat di-scroll -->
+    <header class="site-header">
+        <div class="container">
+            <!-- Brand/Logo mengarah ke halaman utama (Profile) -->
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+
+            <!-- Navigasi Utama tanpa tag nav ganda -->
+            <nav aria-label="Main Navigation">
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_main' %}#about">About</a>
+                <a href="{% url 'main:show_main' %}#values">Values</a>
+                <a href="{% url 'main:show_main' %}#background">Skills & Background</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="details-section">
+            <div class="container">
+                <h2 class="section-title">Experience & Activities</h2>
+
+                <div class="details-grid">
+
+                    {% for exp in experiences %}
+                    <article class="detail-card">
+                        {% if exp.thumbnail %}
+                        <div class="card-image">
+                            <img src="{{ exp.thumbnail }}" alt="{{ exp.title }}">
+                        </div>
+                        {% endif %}
+
+                        <div class="card-header">
+                            <div class="card-badges">
+                                <span class="card-tag">{{ exp.get_category_display }}</span>
+                                <span class="status-badge">
+                                    {% if exp.is_ongoing %}
+                                    Ongoing <span style="display:none;">Sedang berlangsung</span>
+                                    {% else %}
+                                    Selesai
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <h3>{{ exp.title }}</h3>
+                        </div>
+
+                        <p class="desc-text">{{ exp.description }}</p>
+                    </article>
+                    {% empty %}
+                    <p>Belum ada pengalaman yang ditambahkan.</p>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer: Hak cipta dan informasi institusi di bagian penutup halaman -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Stephanie. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

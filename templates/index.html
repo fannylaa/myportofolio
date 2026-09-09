@@ -16,18 +16,19 @@
     <!-- Header navigasi utama yang ditempel di atas (sticky) supaya akses menu tetap gampang saat di-scroll -->
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">Stephanie</a>
-            <!-- Navigasi internal menggunakan anchor hash (#) yang memicu smooth scroll ke section ber-ID sesuai -->
+            <!-- Brand/Logo mengarah ke halaman utama (Profile) -->
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+
+            <!-- Navigasi Utama tanpa tag nav ganda -->
             <nav aria-label="Main Navigation">
-                <nav>
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#values">Values</a>
-                    <a href="#background">Skills & Background</a>
-                </nav>
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="#about">About</a>
+                <a href="#values">Values</a>
+                <a href="#background">Skills & Background</a>
+            </nav>
         </div>
     </header>
-
     <!-- Pembungkus seluruh konten utama halaman web (Semantic HTML5 <main>) -->
     <main>
         <!-- HERO SECTION -->
