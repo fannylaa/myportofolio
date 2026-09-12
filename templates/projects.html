@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stephanie - Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+    <!-- Header navigasi utama yang ditempel di atas (sticky) supaya akses menu tetap gampang saat di-scroll -->
+    <header class="site-header">
+        <div class="container">
+            <!-- Brand/Logo mengarah ke halaman utama (Profile) -->
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+
+            <!-- Navigasi Utama dengan tambahan menu Projects -->
+            <nav aria-label="Main Navigation">
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
+                <a href="{% url 'main:show_main' %}#about">About</a>
+                <a href="{% url 'main:show_main' %}#values">Values</a>
+                <a href="{% url 'main:show_main' %}#background">Skills & Background</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="details-section">
+            <div class="container">
+                <h2 class="section-title">Software Projects</h2>
+
+                <div class="details-grid">
+
+                    {% for project in projects %}
+                    <article class="detail-card">
+                        <div class="card-header">
+                            <div class="card-badges">
+                                <!-- Menampilkan teknologi yang digunakan sebagai tag -->
+                                <span class="card-tag">{{ project.technology }}</span>
+                            </div>
+                            <h3>{{ project.title }}</h3>
+                        </div>
+
+                        <p class="desc-text">{{ project.description }}</p>
+
+                        <!-- Tombol tautan ke repository atau demo jika project_url diisi -->
+                        {% if project.project_url %}
+                        <div class="card-footer-action" style="margin-top: 15px;">
+                            <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer" class="btn-link" style="text-decoration: none; font-weight: bold; color: var(--accent-color, #007bff);">
+                                Lihat Proyek &rarr;
+                            </a>
+                        </div>
+                        {% endif %}
+                    </article>
+                    {% empty %}
+                    <!-- Kondisi kosong wajib sesuai checklist Tugas 2 -->
+                    <p>Belum ada proyek yang ditambahkan.</p>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer: Hak cipta dan informasi institusi di bagian penutup halaman -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Stephanie. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
