@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Experience, Project
+# menghubungkan model yang sudah dibuat ke interface Django Admin agar data bisa diinput secara visual lewat browser.
+
 
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
