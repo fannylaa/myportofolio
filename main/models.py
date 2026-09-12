@@ -29,3 +29,13 @@ class Experience(models.Model):
     @property
     def status_text(self):
         return "Sedang berlangsung" if self.is_ongoing else "Selesai"
+    
+class Project(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    technology = models.CharField(max_length=255, help_text="Contoh: Java, Python, Django")
+    project_url = models.URLField(blank=True, null=True, help_text="Link ke repository/demo")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
