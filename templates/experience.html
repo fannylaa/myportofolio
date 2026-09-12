@@ -23,6 +23,7 @@
             <nav aria-label="Main Navigation">
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
                 <a href="{% url 'main:show_main' %}#about">About</a>
                 <a href="{% url 'main:show_main' %}#values">Values</a>
                 <a href="{% url 'main:show_main' %}#background">Skills & Background</a>
@@ -34,7 +35,14 @@
         <section class="details-section">
             <div class="container">
                 <h2 class="section-title">Experience & Activities</h2>
-
+                <form method="GET" action="{% url 'main:show_experience' %}"
+                    style="margin-bottom: 2rem; display: flex; gap: 10px; max-width: 500px;">
+                    <input type="text" name="q" value="{{ selected_query }}"
+                        placeholder="Cari pengalaman (posisi/perusahaan)..."
+                        style="padding: 10px 14px; border-radius: 6px; border: 1px solid #ccc; flex: 1; font-family: inherit;">
+                    <button type="submit"
+                        style="padding: 10px 20px; background-color: var(--accent-color, #007bff); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Cari</button>
+                </form>
                 <div class="details-grid">
 
                     {% for exp in experiences %}

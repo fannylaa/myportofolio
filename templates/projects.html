@@ -35,7 +35,11 @@
         <section class="details-section">
             <div class="container">
                 <h2 class="section-title">Software Projects</h2>
-
+                <form method="GET" action="{% url 'main:show_projects' %}" style="margin-bottom: 2rem; display: flex; gap: 10px; max-width: 500px;">
+                    <input type="text" name="tech" value="{{ selected_tech }}" placeholder="Cari berdasarkan teknologi (misal: Python)..." style="padding: 10px 14px; border-radius: 6px; border: 1px solid #ccc; flex: 1; font-family: inherit;">
+                    <button type="submit" style="padding: 10px 20px; background-color: var(--accent-color, #007bff); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Cari</button>
+                </form>
+                
                 <div class="details-grid">
 
                     {% for project in projects %}

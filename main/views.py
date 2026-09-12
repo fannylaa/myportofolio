@@ -40,11 +40,16 @@ def show_main(request):
 
 
 def show_experience(request):
-    experiences = Experience.objects.all()
+    query = request.GET.get('q', '')
+    if query:
+        # Sesuaikan 'role' atau 'company' dengan field yang ada di model Experience kamu
+        experiences = Experience.objects.filter(role__icontains=query) | Experience.objects.filter(company__icontains=query)
+    else:
+        experiences = Experience.objects.all()
 
     context = {
         'name': 'Stephanie',
-        'experiences': experiences,
+        'selected_query': query,
     }
     return render(request, 'experience.html', context)
 
@@ -53,8 +58,14 @@ def show_projects(request):
     View untuk mengambil seluruh objek Project dari database 
     dan mengalirkannya ke template projects.html lewat context.
     """
-    projects = Project.objects.all().order_by('-created_at')
+    tech_query = request.GET.get('tech', '')
+    if tech_query:
+        projects = Project.objects.filter(technology__icontains=tech_query)
+    else:
+        projects = Project.objects.all()
+
     context = {
         'projects': projects,
+        'selected_tech': tech_query,
     }
     return render(request, 'projects.html', context)
