@@ -21,10 +21,14 @@ setiap kali menambahkan fitur/model baru pada django, urutan proses yang terjadi
    (contoh pada fitur ini: menyalurkan `context` ke template `projects.html`).
 
 """
-from django.shortcuts import render
+
 
 from main.models import Experience, Project
-
+from django.contrib import messages
+from main.forms import ProjectForm
+from django.core import serializers
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 def show_main(request):
     context = {
@@ -43,13 +47,14 @@ def show_experience(request):
     query = request.GET.get('q', '')
     if query:
         # Sesuaikan 'role' atau 'company' dengan field yang ada di model Experience kamu
-        experiences = Experience.objects.filter(role__icontains=query) | Experience.objects.filter(company__icontains=query)
+        experiences = Experience.objects.filter(title__icontains=query) | Experience.objects.filter(description__icontains=query)
     else:
         experiences = Experience.objects.all()
 
     context = {
         'name': 'Stephanie',
         'selected_query': query,
+        'experiences': experiences,
     }
     return render(request, 'experience.html', context)
 
@@ -65,7 +70,25 @@ def show_projects(request):
         projects = Project.objects.all()
 
     context = {
+        'name': 'Stephanie',
         'projects': projects,
         'selected_tech': tech_query,
     }
     return render(request, 'projects.html', context)
+
+def create_project(request):
+    """
+    View untuk menangani pembuatan proyek baru melalui form (ModelForm).
+    """
+    form = ProjectForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek baru berhasil ditambahkan!")
+        return redirect("main:show_projects")
+
+    context = {
+        "name": "Stephanie",
+        "form": form,
+    }
+    return render(request, "projects_form.html", context)

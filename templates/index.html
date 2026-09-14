@@ -1,199 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stephanie - Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
+{% block meta %}
+<title>Stephanie - Portfolio</title>
+{% endblock meta %}
 
-<body>
+{% block content %}
+<!-- Pembungkus seluruh konten utama halaman web (Semantic HTML5 <main>) -->
+<main>
+    <!-- HERO SECTION -->
+    <!-- Bagian paling atas untuk menarik perhatian pengunjung pertama kali (First Impression) -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <div class="hero-title">
+                <span class="badge-cheerful"> Hello world, welcome!</span>
+                <h1>Hi, I'm Stephanie! </h1>
+                <p class="subtitle">Computer Science Student at Fasilkom UI</p>
+            </div>
+            <!-- Media Profil: Menampilkan foto atau ilustrasi visual utama -->
+            <div class="hero-image-wrapper">
+                <img src="/static/img/images2.jpeg" alt="Stephanie" class="hero-avatar">
+            </div>
 
-    <!-- Header navigasi utama yang ditempel di atas (sticky) supaya akses menu tetap gampang saat di-scroll -->
-    <header class="site-header">
-        <div class="container">
-            <!-- Brand/Logo mengarah ke halaman utama (Profile) -->
-            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
-
-            <!-- Navigasi Utama tanpa tag nav ganda -->
-            <nav aria-label="Main Navigation">
-                <a href="{% url 'main:show_main' %}">Profile</a>
-                <a href="{% url 'main:show_experience' %}">Experience</a>
-                <a href="{% url 'main:show_projects' %}">Projects</a>
-                <a href="#about">About</a>
-                <a href="#values">Values</a>
-                <a href="#background">Skills & Background</a>
-            </nav>
+            <div class="hero-action">
+                <p class="hero-desc">
+                    Navigating CS life with curiosity, lots of iced coffee, and a genuine love for logic. Always up
+                    for solving puzzles, helping others learn, and making web dev fun!
+                </p>
+                <!-- Tombol tombol cepat yang mengarahkan pembaca ke bagian values -->
+                <a href="#values" class="btn-primary">Explore My Vibe &rarr;</a>
+            </div>
         </div>
-    </header>
-    <!-- Pembungkus seluruh konten utama halaman web (Semantic HTML5 <main>) -->
-    <main>
-        <!-- HERO SECTION -->
-        <!-- Bagian paling atas untuk menarik perhatian pengunjung pertama kali (First Impression) -->
-        <section class="hero" id="home">
-            <div class="container hero-content">
-                <div class="hero-title">
-                    <span class="badge-cheerful"> Hello world, welcome!</span>
-                    <h1>Hi, I'm Stephanie! </h1>
-                    <p class="subtitle">Computer Science Student at Fasilkom UI</p>
-                </div>
-                <!-- Media Profil: Menampilkan foto atau ilustrasi visual utama -->
-                <div class="hero-image-wrapper">
-                    <img src="/static/img/images2.jpeg" alt="Stephanie" class="hero-avatar">
-                </div>
+    </section>
 
-                <div class="hero-action">
-                    <p class="hero-desc">
-                        Navigating CS life with curiosity, lots of iced coffee, and a genuine love for logic. Always up
-                        for solving puzzles, helping others learn, and making web dev fun!
-                    </p>
-                    <!-- Tombol tombol cepat yang mengarahkan pembaca ke bagian values -->
-                    <a href="#values" class="btn-primary">Explore My Vibe &rarr;</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ABOUT ME SECTION -->
-        <!-- Informasi latar belakang pribadi dan data akademis -->
-        <section class="about-section" id="about">
-            <div class="container">
-                <h2 class="section-title">A Bit About Me</h2>
-                <div class="about-card">
-                    <p class="bio-text">
-                        A Computer Science student at Universitas Indonesia passionate about exploring how code works
-                        under the hood. I love solving complex logical puzzles, mastering fundamental concepts, and
-                        building clean, efficient tools.
-                    </p>
-                    <!-- Metadata menggunakan Description List (<dl>) yang sangat tepat secara semantik untuk data key-value -->
-                    <dl class="meta-grid">
-                        <div class="meta-item">
-                            <dt>NPM</dt>
-                            <dd>2506547153</dd>
-                        </div>
-                        <div class="meta-item">
-                            <dt>Degree Program</dt>
-                            <dd>B.Sc. in Computer Science</dd>
-                        </div>
-                        <div class="meta-item">
-                            <dt>Campus</dt>
-                            <dd>Fasilkom UI</dd>
-                        </div>
-                    </dl>
-                </div>
-            </div>
-        </section>
-
-        <!-- CORE VALUES SECTION -->
-        <!-- Prinsip dasar dan mindset dalam memecahkan masalah (Nilai Personal) -->
-        <section class="values-section" id="values">
-            <div class="container">
-                <h2 class="section-title">Things I Live By</h2>
-                <div class="values-grid">
-
-                    <article class="value-card card-teal">
-                        <span class="value-tag">01 / LOGIC</span>
-                        <h3>Logic Over Shortcuts</h3>
-                        <p>Understanding the "why" behind every line of code is way more satisfying than just
-                            copy-pasting a quick fix.</p>
-                    </article>
-
-                    <article class="value-card card-yellow">
-                        <span class="value-tag">02 / PEDAGOGY</span>
-                        <h3>Joy in Teaching</h3>
-                        <p>Teaching others isn't just about sharing answers. it's about making complex ideas feel
-                            approachable and fun!</p>
-                    </article>
-
-                    <article class="value-card card-coral">
-                        <span class="value-tag">03 / RESILIENCE</span>
-                        <h3>Embrace the Bugs</h3>
-                        <p>Treating code errors as interesting puzzles rather than frustrating roadblocks. Keep
-                            experimenting and learning!</p>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- BACKGROUND & SKILLS SECTION: Detail pendidikan, keahlian teknis, dan proyek akademis -->
-        <section class="details-section" id="background">
-            <div class="container">
-                <h2 class="section-title">Background & Skills 🎓</h2>
-
-                <div class="details-grid">
-
-                    <!-- Card 1: Latar Belakang Akademis & Matkul Releva -->
-                    <article class="detail-card">
-                        <div class="card-header">
-                            <span class="card-tag">ACADEMICS</span>
-                            <h3>Education</h3>
-                        </div>
-                        <ul class="detail-list">
-                            <li>
-                                <strong>Universitas Indonesia</strong>
-                                <span class="sub-text">B.Sc. in Computer Science</span>
-                                <span class="date-badge">2025 - Present</span>
-                            </li>
-                            <li>
-                                <strong>Relevant Coursework</strong>
-                                <span class="sub-text">Data Structures & Algorithms, Java OOP, Discrete Mathematics,
-                                    Computer Architecture</span>
-                            </li>
-                        </ul>
-                    </article>
-
-                    <!-- Card 2: Pengelompokan Keahlian Teknis & Tools -->
-                    <article class="detail-card">
-                        <div class="card-header">
-                            <span class="card-tag">STACK</span>
-                            <h3>Technical Skills</h3>
-                        </div>
-                        <ul class="detail-list">
-                            <li>
-                                <strong>Languages & Frameworks</strong>
-                                <span class="sub-text">Java (OOP Focus), Python, Django, HTML5, CSS3</span>
-                            </li>
-                            <li>
-                                <strong>Tools & Environment</strong>
-                                <span class="sub-text">Git & GitHub, VS Code, Command Line / Bash, Linux</span>
-                            </li>
-                            <li>
-                                <strong>Core Competencies</strong>
-                                <span class="sub-text">Object-Oriented Design, Logic Modeling, Debugging</span>
-                            </li>
-                        </ul>
-                    </article>
-
-                    <!-- Card 3: Fokus Proyek & Pengalaman Praktis -->
-                    <article class="detail-card">
-                        <div class="card-header">
-                            <span class="card-tag">ROLE</span>
-                            <h3>Experience</h3>
-                        </div>
-                        <ul class="detail-list">
-                            <li>
-                                <strong>Academic Software Projects</strong>
-                                <span class="sub-text">Faculty of Computer Science, UI</span>
-                                <p class="desc-text">Developing object oriented applications, game logic simulations,
-                                    and vehicle delivery systems in Java, alongside web-based Django templates.</p>
-                            </li>
-                        </ul>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-    </main>
-    <!-- Footer: Hak cipta dan informasi institusi di bagian penutup halaman -->
-    <footer class="site-footer">
+    <!-- ABOUT ME SECTION -->
+    <!-- Informasi latar belakang pribadi dan data akademis -->
+    <section class="about-section" id="about">
         <div class="container">
-            <p>&copy; 2026 Stephanie. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <h2 class="section-title">A Bit About Me</h2>
+            <div class="about-card">
+                <p class="bio-text">
+                    A Computer Science student at Universitas Indonesia passionate about exploring how code works
+                    under the hood. I love solving complex logical puzzles, mastering fundamental concepts, and
+                    building clean, efficient tools.
+                </p>
+                <!-- Metadata menggunakan Description List (<dl>) yang sangat tepat secara semantik untuk data key-value -->
+                <dl class="meta-grid">
+                    <div class="meta-item">
+                        <dt>NPM</dt>
+                        <dd>2506547153</dd>
+                    </div>
+                    <div class="meta-item">
+                        <dt>Degree Program</dt>
+                        <dd>B.Sc. in Computer Science</dd>
+                    </div>
+                    <div class="meta-item">
+                        <dt>Campus</dt>
+                        <dd>Fasilkom UI</dd>
+                    </div>
+                </dl>
+            </div>
         </div>
-    </footer>
-</body>
+    </section>
 
-</html>
+    <!-- CORE VALUES SECTION -->
+    <!-- Prinsip dasar dan mindset dalam memecahkan masalah (Nilai Personal) -->
+    <section class="values-section" id="values">
+        <div class="container">
+            <h2 class="section-title">Things I Live By</h2>
+            <div class="values-grid">
+
+                <article class="value-card card-teal">
+                    <span class="value-tag">01 / LOGIC</span>
+                    <h3>Logic Over Shortcuts</h3>
+                    <p>Understanding the "why" behind every line of code is way more satisfying than just
+                        copy-pasting a quick fix.</p>
+                </article>
+
+                <article class="value-card card-yellow">
+                    <span class="value-tag">02 / PEDAGOGY</span>
+                    <h3>Joy in Teaching</h3>
+                    <p>Teaching others isn't just about sharing answers. it's about making complex ideas feel
+                        approachable and fun!</p>
+                </article>
+
+                <article class="value-card card-coral">
+                    <span class="value-tag">03 / RESILIENCE</span>
+                    <h3>Embrace the Bugs</h3>
+                    <p>Treating code errors as interesting puzzles rather than frustrating roadblocks. Keep
+                        experimenting and learning!</p>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- BACKGROUND & SKILLS SECTION: Detail pendidikan, keahlian teknis, dan proyek akademis -->
+    <section class="details-section" id="background">
+        <div class="container">
+            <h2 class="section-title">Background & Skills 🎓</h2>
+
+            <div class="details-grid">
+
+                <!-- Card 1: Latar Belakang Akademis & Matkul Releva -->
+                <article class="detail-card">
+                    <div class="card-header">
+                        <span class="card-tag">ACADEMICS</span>
+                        <h3>Education</h3>
+                    </div>
+                    <ul class="detail-list">
+                        <li>
+                            <strong>Universitas Indonesia</strong>
+                            <span class="sub-text">B.Sc. in Computer Science</span>
+                            <span class="date-badge">2025 - Present</span>
+                        </li>
+                        <li>
+                            <strong>Relevant Coursework</strong>
+                            <span class="sub-text">Data Structures & Algorithms, Java OOP, Discrete Mathematics,
+                                Computer Architecture</span>
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- Card 2: Pengelompokan Keahlian Teknis & Tools -->
+                <article class="detail-card">
+                    <div class="card-header">
+                        <span class="card-tag">STACK</span>
+                        <h3>Technical Skills</h3>
+                    </div>
+                    <ul class="detail-list">
+                        <li>
+                            <strong>Languages & Frameworks</strong>
+                            <span class="sub-text">Java (OOP Focus), Python, Django, HTML5, CSS3</span>
+                        </li>
+                        <li>
+                            <strong>Tools & Environment</strong>
+                            <span class="sub-text">Git & GitHub, VS Code, Command Line / Bash, Linux</span>
+                        </li>
+                        <li>
+                            <strong>Core Competencies</strong>
+                            <span class="sub-text">Object-Oriented Design, Logic Modeling, Debugging</span>
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- Card 3: Fokus Proyek & Pengalaman Praktis -->
+                <article class="detail-card">
+                    <div class="card-header">
+                        <span class="card-tag">ROLE</span>
+                        <h3>Experience</h3>
+                    </div>
+                    <ul class="detail-list">
+                        <li>
+                            <strong>Academic Software Projects</strong>
+                            <span class="sub-text">Faculty of Computer Science, UI</span>
+                            <p class="desc-text">Developing object oriented applications, game logic simulations,
+                                and vehicle delivery systems in Java, alongside web-based Django templates.</p>
+                        </li>
+                    </ul>
+                </article>
+
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}

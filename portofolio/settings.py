@@ -12,6 +12,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# gunakan https:// untuk trailing urlnya
+CSRF_TRUSTED_ORIGINS = ["<https://stephanie-revalina-myportofolio2.pws.cs.ui.ac.id/>"]
 
 # Application definition
 

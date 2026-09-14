@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_projects
+from main.views import show_main, show_experience, show_projects, create_project
 
 app_name = "main"
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path("experience/", show_experience, name="show_experience"),
     # path untuk projects
     path('projects/', show_projects, name='show_projects'),
+    path("projects/add/", create_project, name="create_project"),
 ]

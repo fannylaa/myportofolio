@@ -6,10 +6,26 @@
 margin: 0 & padding: 0 untuk menghapus spasi bawaan browser agat layout rapi
 box-sizing: border box untuk memastikan perhitungan lebar/tinggi elemen sudah memperhitungkan 
 padding dan border, sehingga size elemen pas */
-* {
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1;
+}
+.site-header {
+    position: relative;
+    z-index: 1000; /* Memastikan header berada di lapisan paling atas */
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1001; /* Memastikan area flex dan link di dalamnya bisa diklik */
 }
 
 /* Mengaktifkan efek scroll yang mulus ketika pengguna mengklik menu navigasi berbasis Hash (#) */
@@ -63,6 +79,8 @@ margin: 0 auto untuk mengunci seluruh isi konten agar berada tepat di tengah lay
     padding: 0 1.5rem;
 }
 
+
+
 /* Style Sub-Judul Utama Setiap Section */
 .section-title {
     font-family: 'Space Grotesk', sans-serif;
@@ -106,6 +124,8 @@ nav a {
     font-size: 0.95rem;
     font-weight: 500;
     transition: color 0.2s ease;
+    z-index: 1002; 
+    pointer-events: auto;
 }
 
 nav a:hover {
@@ -492,3 +512,116 @@ nav a:hover {
     display: inline-block;
     padding: 5px 10px; /* Memperbesar area klik tombol */
 }
+
+/* Container Form */
+.project-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+/* Form Label */
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #111827;
+}
+
+/* Input & Textarea Fields */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font: inherit;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+/* Input Focus States */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #0f766e;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+}
+
+/* Form Error Text */
+.form-error {
+    color: #b42318;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+/* Tombol Utama - Hijau Solid yang Modern & Bold */
+.button {
+    background-color: #1b4332; /* Hijau tua utama */
+    color: #ffffff; /* Teks putih bersih */
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(27, 67, 50, 0.25); /* Efek bayangan lembut sewarna */
+}
+
+.button:hover {
+    background-color: #081c15; /* Lebih gelap saat kursor diarahkan */
+    transform: translateY(-2px); /* Sedikit naik ke atas saat di-hover */
+    box-shadow: 0 6px 15px rgba(8, 28, 21, 0.35);
+}
+
+/* Tombol Sekunder (Batal) - Outline Elegan */
+.button-secondary {
+    background-color: transparent;
+    color: #1b4332;
+    border: 2px solid #1b4332;
+    padding: 12px 26px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.button-secondary:hover {
+    background-color: rgba(27, 67, 50, 0.08); /* Efek transparan hijau tipis saat di-hover */
+    transform: translateY(-2px);
+}
+/* Styling untuk Tombol Cari */
+.search-button, 
+form button[type="submit"] { /* Menyesuaikan tombol submit secara umum jika diperlukan */
+    background-color: #1b4332; /* Hijau tua yang senada */
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(27, 67, 50, 0.2);
+}
+
+.search-button:hover, 
+form button[type="submit"]:hover {
+    background-color: #081c15; /* Lebih gelap saat di-hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(8, 28, 21, 0.3);
+}
+
