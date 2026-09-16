@@ -10,6 +10,13 @@
         <section class="details-section">
             <div class="container">
                 <h2 class="section-title">Software Projects</h2>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <a href="{% url 'main:create_project' %}" class="button button-primary" style="display: inline-block; padding: 10px 18px; background-color: #1b4332; color: white; border-radius: 6px; text-decoration: none; font-weight: 500;">
+                        + Add New Project
+                    </a>
+                </div> 
+                
                 <form method="GET" action="{% url 'main:show_projects' %}" style="margin-bottom: 2rem; display: flex; gap: 10px; max-width: 500px;">
                     <input type="text" name="tech" value="{{ selected_tech }}" placeholder="Cari berdasarkan teknologi (misal: Python)..." style="padding: 10px 14px; border-radius: 6px; border: 1px solid #ccc; flex: 1; font-family: inherit;">
                    <button type="submit" class="search-button">Cari</button>
