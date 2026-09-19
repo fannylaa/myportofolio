@@ -65,7 +65,7 @@ def create_experience(request):
         form.save()
         return redirect('main:show_experience') 
     
-    context = {'form': form}
+    context = {'form': form, 'name': 'Stephanie'}
     return render(request, 'create_experience.html', context)
 
 def edit_experience(request, id):
@@ -76,7 +76,7 @@ def edit_experience(request, id):
         form.save()
         return redirect('main:show_experience')
         
-    context = {'form': form}
+    context = {'form': form, 'name': 'Stephanie'}
     return render(request, 'edit_experience.html', context)
 
 def delete_experience(request, id):
