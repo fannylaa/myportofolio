@@ -26,6 +26,7 @@ setiap kali menambahkan fitur/model baru pada django, urutan proses yang terjadi
 from main.models import Experience, Project
 from django.contrib import messages
 from main.forms import ProjectForm
+from main.forms import ExperienceForm
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -57,6 +58,40 @@ def show_experience(request):
         'experiences': experiences,
     }
     return render(request, 'experience.html', context)
+
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_experience') 
+    
+    context = {'form': form}
+    return render(request, 'create_experience.html', context)
+
+def edit_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+    
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_experience')
+        
+    context = {'form': form}
+    return render(request, 'edit_experience.html', context)
+
+def delete_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    experience.delete()
+    return redirect('main:show_experience')
+
+def show_json(request):
+    data = Experience.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+
+def show_json_by_id(request, id):
+    data = Experience.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_projects(request):
     """
