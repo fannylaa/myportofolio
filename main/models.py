@@ -1,6 +1,7 @@
 # Create your models here.
 import uuid
 from django.db import models
+from django.contrib.auth.models import User
 """
 penjelasan: 
 1. model (file models.py):
@@ -57,6 +58,9 @@ class Project(models.Model):
     description = models.TextField()
     technology = models.CharField(max_length=255, help_text="Contoh: Java, Python, Django")
     project_url = models.URLField(blank=True, null=True, help_text="Link ke repository/demo")
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_projects", blank=True
+    )
     project_image_url = models.URLField(blank=True, null=True, help_text="Link gambar proyek")
     created_at = models.DateTimeField(auto_now_add=True)
 
