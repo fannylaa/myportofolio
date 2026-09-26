@@ -30,7 +30,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from main.forms import ProjectForm
 from main.forms import ExperienceForm
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required  # Tambahkan baris ini
 from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
@@ -50,6 +50,7 @@ def show_main(request):
     return render(request, "index.html", context)
 
 def show_experience(request):
+    is_editor = request.user.groups.filter(name='Editor').exists()
     query = request.GET.get('q', '')
     if query:
         # Sesuaikan 'role' atau 'company' dengan field yang ada di model Experience kamu
@@ -60,11 +61,15 @@ def show_experience(request):
     context = {
         'name': 'Stephanie',
         'selected_query': query,
+        'is_editor': is_editor,
         'experiences': experiences,
     }
     return render(request, 'experience.html', context)
 
 def create_experience(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Maaf, hanya pemilik portofolio yang dapat menambahkan experience baru.")
+        
     form = ExperienceForm(request.POST or None)
     if form.is_valid() and request.method == "POST":
         form.save()
@@ -74,6 +79,10 @@ def create_experience(request):
     return render(request, 'create_experience.html', context)
 
 def edit_experience(request, id):
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
+        return HttpResponseForbidden("Anda tidak memiliki hak akses untuk mengubah data experience ini.")
+
     experience = get_object_or_404(Experience, pk=id)
     form = ExperienceForm(request.POST or None, instance=experience)
     
@@ -85,6 +94,8 @@ def edit_experience(request, id):
     return render(request, 'edit_experience.html', context)
 
 def delete_experience(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Maaf, hanya pemilik portofolio yang dapat menghapus data experience.")
     experience = get_object_or_404(Experience, pk=id)
     experience.delete()
     return redirect('main:show_experience')
@@ -103,6 +114,7 @@ def show_projects(request):
     View untuk mengambil seluruh objek Project dari database 
     dan mengalirkannya ke template projects.html lewat context.
     """
+    is_editor = request.user.groups.filter(name='Editor').exists()
     tech_query = request.GET.get('tech', '')
     if tech_query:
         projects = Project.objects.filter(technology__icontains=tech_query)
@@ -111,6 +123,7 @@ def show_projects(request):
 
     context = {
         'name': 'Stephanie',
+        'is_editor': is_editor,
         'projects': projects,
         'selected_tech': tech_query,
     }
@@ -139,6 +152,9 @@ def create_project(request):
 def edit_project(request, id):
     project = get_object_or_404(Project, pk=id)
     form = ProjectForm(request.POST or None, instance=project)
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    if not (request.user.is_superuser or is_editor):
+        return HttpResponseForbidden("Anda tidak memiliki hak akses untuk mengubah data ini.")
     
     if form.is_valid() and request.method == "POST":
         form.save()
@@ -148,6 +164,8 @@ def edit_project(request, id):
     return render(request, 'edit_project.html', context)
 
 def delete_project(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Maaf, hanya pemilik portofolio (superuser) yang dapat menghapus proyek.")
     project = get_object_or_404(Project, pk=id)
     project.delete()
     return redirect('main:show_projects')

@@ -11,12 +11,14 @@
         <div class="container">
             <h2 class="section-title">Experience & Activities</h2>
 
+            {% if user.is_superuser %}
             <div style="margin-bottom: 1.5rem;">
                 <a href="{% url 'main:create_experience' %}" class="button button-primary"
                     style="display: inline-block; padding: 10px 18px; background-color: #1b4332; color: white; border-radius: 6px; text-decoration: none; font-weight: 500;">
                     + Add New Experience
                 </a>
             </div>
+            {% endif %}
 
             <form method="GET" action="{% url 'main:show_experience' %}"
                 style="margin-bottom: 2rem; display: flex; gap: 10px; max-width: 500px;">
@@ -50,17 +52,22 @@
                         <h3>{{ exp.title }}</h3>
                     </div>
                     <p class="desc-text" style="margin-top: 10px;">{{ exp.description }}</p>
+
+                    {% if user.is_superuser or is_editor %}
                     <div class="card-footer-action" style="margin-top: 15px; display: flex; gap: 10px;">
                         <a href="{% url 'main:edit_experience' exp.id %}" class="btn-link"
                             style="text-decoration: none; font-weight: 500; color: #d97706;">
                             Edit
                         </a>
+                        {% if user.is_superuser %}
                         <a href="{% url 'main:delete_experience' exp.id %}" class="btn-link"
                             style="text-decoration: none; font-weight: 500; color: #dc2626;"
                             onclick="return confirm('Yakin ingin menghapus pengalaman ini?');">
                             Delete
                         </a>
+                        {% endif %}
                     </div>
+                    {% endif %}
                 </article>
                 {% empty %}
                 <p>Belum ada pengalaman yang ditambahkan.</p>

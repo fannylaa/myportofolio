@@ -42,29 +42,32 @@
                     <p class="desc-text">{{ project.description }}</p>
 
                     <!-- Tombol tautan ke repository atau demo jika project_url diisi -->
-                    {% if project.project_url %}
-                    <div class="card-footer-action" style="margin-top: 15px;">
+                    <div style="margin-top: 15px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+
+                        <!-- 1. Tombol Lihat Proyek (jika ada) -->
+                        {% if project.project_url %}
                         <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer" class="btn-link"
                             style="text-decoration: none; font-weight: bold; color: var(--accent-color, #007bff);">
                             Lihat Proyek &rarr;
                         </a>
-                    </div>
-                    {% endif %}
-                    <div style="margin-top: 15px;">
+                        {% endif %}
+
+                        <!-- 2. Tombol Star -->
                         {% include "components/project_star.html" with project=project %}
-                    </div>
-                    {% if user.is_superuser %}
-                    <div class="card-admin-actions"
-                        style="margin-top: 15px; display: flex; gap: 15px; align-items: center;">
+
+                        <!-- 3. Tombol Edit & Delete (Hanya untuk Superuser atau Editor) -->
+                        {% if user.is_superuser or is_editor %}
                         <a href="{% url 'main:edit_project' project.id %}"
-                            style="color: #d97706; text-decoration: none; font-weight: 500;">
+                            style="text-decoration: none; font-weight: 500; color: #d97706;">
                             Edit
                         </a>
 
-                        <!-- Menyertakan komponen modal hapus dari file terpisah -->
+                        {% if user.is_superuser %}
                         {% include "components/project_delete_modal.html" with project=project %}
+                        {% endif %}
+                        {% endif %}
+
                     </div>
-                    {% endif %}
                 </article>
                 {% empty %}
                 <!-- Kondisi kosong wajib sesuai checklist Tugas 2 -->

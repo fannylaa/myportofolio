@@ -1,11 +1,12 @@
 <p class="experience-status">
     <button type="button"
-            class="button button-danger"
-            popovertarget="delete-project-{{ project.id }}"
-            aria-label="Hapus {{ project.title }}"
-            title="Hapus proyek">
-        Hapus Proyek
-    </button>
+        class="btn-link"
+        popovertarget="delete-project-{{ project.id }}"
+        aria-label="Hapus {{ project.title }}"
+        title="Hapus proyek"
+        style="background: none; border: none; padding: 0; font-family: inherit; font-size: inherit; font-weight: 500; color: #dc2626; cursor: pointer; text-decoration: none;">
+    Delete
+</button>
 </p>
 <div id="delete-project-{{ project.id }}"
      class="project-delete-modal"
