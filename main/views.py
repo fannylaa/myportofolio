@@ -32,6 +32,8 @@ from main.forms import ExperienceForm
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required  # Tambahkan baris ini
+from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
 
 def show_main(request):
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
@@ -114,10 +116,13 @@ def show_projects(request):
     }
     return render(request, 'projects.html', context)
 
+@login_required(login_url="/login/")
 def create_project(request):
     """
     View untuk menangani pembuatan proyek baru melalui form (ModelForm).
     """
+    if not request.user.is_superuser:
+        raise PermissionDenied
     form = ProjectForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -130,6 +135,22 @@ def create_project(request):
         "form": form,
     }
     return render(request, "projects_form.html", context)
+
+def edit_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    form = ProjectForm(request.POST or None, instance=project)
+    
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_projects')
+        
+    context = {'form': form, 'name': 'Stephanie'}
+    return render(request, 'edit_project.html', context)
+
+def delete_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+    project.delete()
+    return redirect('main:show_projects')
 
 def register(request):
     form = UserCreationForm(request.POST or None)

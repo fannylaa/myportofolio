@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_projects, create_project, show_experience, create_experience, edit_experience, delete_experience, show_json, show_json_by_id, register, login_user, logout_user
+from main.views import show_main, show_experience, show_projects, create_project, edit_project, delete_project, show_experience, create_experience, edit_experience, delete_experience, show_json, show_json_by_id, register, login_user, logout_user
 
 app_name = "main"
 
@@ -11,6 +11,8 @@ urlpatterns = [
     # path untuk projects
     path('projects/', show_projects, name='show_projects'),
     path("projects/add/", create_project, name="create_project"),
+    path('projects/edit/<int:id>/', edit_project, name='edit_project'),
+    path('projects/delete/<int:id>/', delete_project, name='delete_project'),
     # path untuk tugas 3 punya experience
     path('experience/create/', create_experience, name='create_experience'),
     path('experience/edit/<str:id>/', edit_experience, name='edit_experience'),
