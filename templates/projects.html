@@ -9,73 +9,284 @@
 <main>
     <section class="details-section">
         <div class="container">
-            <h2 class="section-title">Software Projects</h2>
-
-            {% if user.is_superuser %}
-            <div style="margin-bottom: 1.5rem;">
-                <a href="{% url 'main:create_project' %}" class="button button-primary"
-                    style="display: inline-block; padding: 10px 18px; background-color: #1b4332; color: white; border-radius: 6px; text-decoration: none; font-weight: 500;">
-                    + Add New Project
-                </a>
+            <script>
+                const IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %} false{% endif %};
+                const IS_OWNER = {% if request.user.is_superuser %}true{% else %} false{% endif %};
+            </script>
+            <div class="project-header" style="margin-bottom: 1.5rem;">
+                <h2 class="section-title" style="margin-bottom: 1rem;">Software Projects</h2>
+                {% if user.is_superuser %}
+                <button type="button" class="button project-add-button" popovertarget="add-project-modal"
+                    style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background-color: #1b4332; color: white; border-radius: 6px; border: none; cursor: pointer; font-weight: 500;">
+                    <span aria-hidden="true">+</span>
+                    Tambah Proyek
+                </button>
+                {% endif %}
             </div>
-            {% endif %}
-            <form method="GET" action="{% url 'main:show_projects' %}"
-                style="margin-bottom: 2rem; display: flex; gap: 10px; max-width: 500px;">
-                <input type="text" name="tech" value="{{ selected_tech }}"
-                    placeholder="Cari berdasarkan teknologi (misal: Python)..."
-                    style="padding: 10px 14px; border-radius: 6px; border: 1px solid #ccc; flex: 1; font-family: inherit;">
-                <button type="submit" class="search-button">Cari</button>
+            <form id="project-search-form" class="project-search">
+                <input type="search" id="search-input" name="title" value="{{ title_query }}"
+                    placeholder="Cari berdasarkan nama proyek" class="project-search__input"
+                    aria-label="Cari berdasarkan nama proyek">
+                <button type="submit" class="button">Cari</button>
             </form>
 
-            <div class="details-grid">
-
-                {% for project in projects %}
-                <article class="detail-card">
-                    <div class="card-header">
-                        <div class="card-badges">
-                            <!-- Menampilkan teknologi yang digunakan sebagai tag -->
-                            <span class="card-tag">{{ project.technology }}</span>
-                        </div>
-                        <h3>{{ project.title }}</h3>
-                    </div>
-
-                    <p class="desc-text">{{ project.description }}</p>
-
-                    <!-- Tombol tautan ke repository atau demo jika project_url diisi -->
-                    <div style="margin-top: 15px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-
-                        <!-- 1. Tombol Lihat Proyek (jika ada) -->
-                        {% if project.project_url %}
-                        <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer" class="btn-link"
-                            style="text-decoration: none; font-weight: bold; color: var(--accent-color, #007bff);">
-                            Lihat Proyek &rarr;
-                        </a>
-                        {% endif %}
-
-                        <!-- 2. Tombol Star -->
-                        {% include "components/project_star.html" with project=project %}
-
-                        <!-- 3. Tombol Edit & Delete (Hanya untuk Superuser atau Editor) -->
-                        {% if user.is_superuser or is_editor %}
-                        <a href="{% url 'main:edit_project' project.id %}"
-                            style="text-decoration: none; font-weight: 500; color: #d97706;">
-                            Edit
-                        </a>
-
-                        {% if user.is_superuser %}
-                        {% include "components/project_delete_modal.html" with project=project %}
-                        {% endif %}
-                        {% endif %}
-
-                    </div>
-                </article>
-                {% empty %}
-                <!-- Kondisi kosong wajib sesuai checklist Tugas 2 -->
-                <p>Belum ada proyek yang ditambahkan.</p>
-                {% endfor %}
-
+            <!-- Loading State -->
+            <div id="loading" class="empty-state hide">
+                <p>Memuat projects...</p>
             </div>
+
+            <!-- Error State -->
+            <div id="error" class="empty-state hide">
+                <p>Gagal memuat data projects. Silakan coba lagi.</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty" class="empty-state hide">
+                <p>Belum ada proyek yang ditambahkan atau ditemukan.</p>
+            </div>
+
+            <!-- Project Grid -->
+            <div class="details-grid" id="grid"></div>
+
         </div>
+        <button class="button button-secondary"
+            onclick="showToast('Notifikasi Sistem', 'Project berhasil dimuat dengan baik!', 'success')">
+            Test Toast Notifikasi
+        </button>
+
     </section>
+    {% if user.is_superuser %}
+    {% include "components/project_form_modal.html" %}
+    {% endif %}
 </main>
+
+
+<script>
+
+    // Konfigurasi
+    const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    let projectsAbortController;
+
+    function closeProjectModal() {
+        document.getElementById("add-project-modal").hidePopover();
+    }
+
+    // Elemen DOM
+    const loadingState = document.getElementById('loading');
+    const errorState = document.getElementById('error');
+    const emptyState = document.getElementById('empty');
+    const gridContainer = document.getElementById('grid');
+    const searchForm = document.getElementById('project-search-form');
+    const searchInput = document.getElementById('search-input');
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let searchDebounceTimer;
+
+    // Menyembunyikan/Menampilkan section halaman
+    function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+    // Membuat elemen card project
+    function buildProjectCardElement(item) {
+        const project = item.fields;
+        const projectId = item.pk;
+
+        const articleElement = document.createElement('article');
+        articleElement.className = 'detail-card';
+
+        const imageHtml = project.project_image_url
+            ? `<img src="${escapeHtml(project.project_image_url)}" alt="Gambar ${escapeHtml(project.title)}" class="project-image">`
+            : '';
+
+        const urlHtml = project.project_url
+            ? `<a href="${escapeHtml(project.project_url)}" class="button" style="box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; font-size: 0.85rem; white-space: nowrap;">Lihat Project</a>`
+            : '';
+
+        const deleteUrl = "{% url 'main:delete_project' '0' %}"
+            .replace('0', projectId);
+        const starUrl = "{% url 'main:toggle_star' '0' %}"
+            .replace('0', projectId);
+        const editUrl = "{% url 'main:edit_project' '0' %}"
+            .replace('0', projectId);
+
+        const isAuthenticated = typeof IS_AUTHENTICATED !== 'undefined' ? IS_AUTHENTICATED : false;
+        const isOwner = typeof IS_OWNER !== 'undefined' ? IS_OWNER : false;
+
+        const starTitle = project.star_count > 0
+            ? `Dibintangi oleh ${escapeHtml(project.starred_by_names)}`
+            : "Jadilah yang pertama memberi star";
+
+        const starHtml = isAuthenticated ? `
+        <form method="post" action="${starUrl}" class="star-form" style="display: inline; margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="button button-star${project.is_starred ? " is-starred" : ""}" title="${starTitle}" style="box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 38px !important; padding: 0 14px !important; font-size: 0.85rem; white-space: nowrap; cursor: pointer;">
+                <span aria-hidden="true" style="margin-right: 4px;">★</span>
+                ${project.is_starred ? "Unstar" : "Star"}
+                <span class="star-count" style="margin-left: 4px;">(${project.star_count})</span>
+            </button>
+        </form>
+    ` : '';
+
+        const editHtml = isOwner
+            ? `<a href="${editUrl}" class="button button-secondary" style="box-sizing: border-box; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; font-size: 0.85rem; white-space: nowrap;">Edit</a>`
+            : '';
+
+        const deleteHtml = isOwner
+            ? `<form method="post" action="${deleteUrl}" style="display: inline; margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus project ini?');" style="box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; font-size: 0.85rem; white-space: nowrap; cursor: pointer;">Hapus</button>
+        </form>`
+            : '';
+
+        const completeCardHtml = `
+        ${imageHtml}
+        <div style="margin-bottom: 0.5rem;">
+            <span class="experience-category" style="display: inline-block; padding: 2px 8px; border: 1px solid var(--line, #e7e5e4); border-radius: 4px; font-size: 0.85rem; font-weight: 500;">${escapeHtml(project.tech_stack || project.technology)}</span>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; font-family: 'Space Grotesk', sans-serif;">${escapeHtml(project.title)}</h3>
+        <p class="experience-description" style="margin-bottom: 1.25rem; color: var(--text-muted, #57534e); line-height: 1.5;">${escapeHtml(project.description)}</p>
+
+        <div class="project-card-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; border-top: 1px solid var(--line, #e7e5e4); padding-top: 1rem;">
+            ${urlHtml}
+            ${starHtml}
+            ${editHtml}
+            ${deleteHtml}
+        </div>
+    `;
+
+        articleElement.innerHTML = completeCardHtml;
+        return articleElement;
+    }
+    // Fetch data project
+    async function fetchProjects(searchQuery = "") {
+        if (projectsAbortController) projectsAbortController.abort();
+        projectsAbortController = new AbortController();
+
+        try {
+            displayPageSection({ showLoading: true });
+
+            const url = searchQuery ? `${BASE_PROJECTS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_PROJECTS_ENDPOINT;
+
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' },
+                signal: projectsAbortController.signal,
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const projectData = await response.json();
+
+            if (projectData.length === 0) {
+                displayPageSection({ showEmpty: true });
+            } else {
+                gridContainer.innerHTML = '';
+                projectData.forEach(item => {
+                    gridContainer.appendChild(buildProjectCardElement(item));
+                });
+                displayPageSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+            console.error('Error loading projects:', error);
+            displayPageSection({ showError: true });
+        }
+    }
+
+    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+    const projectForm = document.getElementById('project-form');
+
+    // Membaca nilai cookie, digunakan untuk mengambil token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Mengirim data form ke server
+    async function addProject(event) {
+        event.preventDefault();
+        const submitButton = projectForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        try {
+            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(projectForm),
+            });
+            const result = await response.json().catch(() => ({}));
+            if (response.ok) {
+                projectForm.reset();
+                closeProjectModal();
+                showToast('Berhasil', 'Proyek baru berhasil ditambahkan!', 'success');
+                setTimeout(() => {
+                    fetchProjects(searchInput.value.trim());
+                }, 150);
+                fetchProjects(searchInput.value.trim());
+            } else {
+                const errorMessages = result.errors
+                    ? Object.values(result.errors).flat().map(error => error.message)
+                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                showToast('Gagal menambahkan proyek', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding project:', error);
+            showToast('Gagal menambahkan proyek', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    if (projectForm) {
+        projectForm.addEventListener('submit', addProject);
+    }
+
+    // Event Handlers untuk Form Search
+    searchForm.addEventListener('submit', function (e) {
+        e.preventDefault(); // Mencegah reload halaman
+        fetchProjects(searchInput.value.trim()); // Jalankan pencarian via AJAX
+    });
+
+    // Start application
+    fetchProjects(searchInput.value.trim());
+
+    function searchProjects() {
+        fetchProjects(searchInput.value.trim());
+    }
+
+    searchInput.addEventListener("input", function () {
+        clearTimeout(searchDebounceTimer);
+
+        searchDebounceTimer = setTimeout(function () {
+            searchProjects();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        searchProjects();
+    });
+</script>
 {% endblock content %}

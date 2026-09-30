@@ -40,6 +40,8 @@ class Experience(models.Model):
     thumbnail = models.URLField(blank=True, null=True)
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.title
     
@@ -50,6 +52,9 @@ class Experience(models.Model):
     @property
     def status_text(self):
         return "Sedang berlangsung" if self.is_ongoing else "Selesai"
+
+    class Meta:
+        ordering = ['-created_at']
 
 # Model: Projects (Tugas 2)
 # Menyimpan data porto proyek yang dibuat
