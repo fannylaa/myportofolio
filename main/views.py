@@ -85,6 +85,7 @@ def show_experience(request):
         'selected_query': query,
         'is_editor': is_editor,
         'experiences': experiences,
+        "form": ExperienceForm(),
     }
     return render(request, 'experience.html', context)
 

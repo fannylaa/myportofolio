@@ -13,22 +13,30 @@
                 const IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %} false{% endif %};
                 const IS_OWNER = {% if request.user.is_superuser %}true{% else %} false{% endif %};
             </script>
-            <div class="project-header" style="margin-bottom: 1.5rem;">
-                <h2 class="section-title" style="margin-bottom: 1rem;">Software Projects</h2>
-                {% if user.is_superuser %}
-                <button type="button" class="button project-add-button" popovertarget="add-project-modal"
-                    style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background-color: #1b4332; color: white; border-radius: 6px; border: none; cursor: pointer; font-weight: 500;">
-                    <span aria-hidden="true">+</span>
-                    Tambah Proyek
-                </button>
-                {% endif %}
+            <div class="projects-top-wrapper" style="margin-bottom: 2rem;">
+                <!-- Header & Tombol Tambah -->
+                <div class="project-header"
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                    <h2 class="section-title" style="margin: 0;">Software Projects</h2>
+                    {% if user.is_superuser %}
+                    <button type="button" class="button project-add-button" popovertarget="add-project-modal"
+                        style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background-color: #1b4332; color: white; border-radius: 6px; border: none; cursor: pointer; font-weight: 500;">
+                        <span aria-hidden="true">+</span>
+                        Add New Project
+                    </button>
+                    {% endif %}
+                </div>
+
+                <!-- Form Search dengan Debounce -->
+                <form id="project-search-form" class="project-search"
+                    style="display: flex; gap: 10px; max-width: 500px;">
+                    <input type="search" id="search-input" name="q" value="{{ selected_query }}"
+                        placeholder="Cari berdasarkan nama proyek..." class="project-search__input"
+                        aria-label="Cari proyek"
+                        style="padding: 10px 14px; border-radius: 6px; border: 1px solid #ccc; flex: 1; font-family: inherit;">
+                    <button type="submit" class="search-button button">Cari</button>
+                </form>
             </div>
-            <form id="project-search-form" class="project-search">
-                <input type="search" id="search-input" name="title" value="{{ title_query }}"
-                    placeholder="Cari berdasarkan nama proyek" class="project-search__input"
-                    aria-label="Cari berdasarkan nama proyek">
-                <button type="submit" class="button">Cari</button>
-            </form>
 
             <!-- Loading State -->
             <div id="loading" class="empty-state hide">
@@ -111,9 +119,6 @@
             ? `<img src="${escapeHtml(project.project_image_url)}" alt="Gambar ${escapeHtml(project.title)}" class="project-image">`
             : '';
 
-        const urlHtml = project.project_url
-            ? `<a href="${escapeHtml(project.project_url)}" class="button" style="box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; font-size: 0.85rem; white-space: nowrap;">Lihat Project</a>`
-            : '';
 
         const deleteUrl = "{% url 'main:delete_project' '0' %}"
             .replace('0', projectId);
@@ -129,28 +134,29 @@
             ? `Dibintangi oleh ${escapeHtml(project.starred_by_names)}`
             : "Jadilah yang pertama memberi star";
 
+        const urlHtml = project.project_url
+            ? `<a href="${escapeHtml(project.project_url)}" style="color: #292524; text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-right: 12px;">Lihat Project</a>`
+            : '';
+
         const starHtml = isAuthenticated ? `
-        <form method="post" action="${starUrl}" class="star-form" style="display: inline; margin: 0;">
+        <form method="post" action="${starUrl}" class="star-form" style="display: inline; margin: 0; margin-right: 12px;">
             {% csrf_token %}
-            <button type="submit" class="button button-star${project.is_starred ? " is-starred" : ""}" title="${starTitle}" style="box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 38px !important; padding: 0 14px !important; font-size: 0.85rem; white-space: nowrap; cursor: pointer;">
-                <span aria-hidden="true" style="margin-right: 4px;">★</span>
-                ${project.is_starred ? "Unstar" : "Star"}
-                <span class="star-count" style="margin-left: 4px;">(${project.star_count})</span>
+            <button type="submit" style="background: none; border: none; outline: none; box-shadow: none; padding: 0; color: ${project.is_starred ? '#1b4332' : '#292524'}; cursor: pointer; font-weight: 500; font-size: 0.9rem;">
+                ${project.is_starred ? "Unstar" : "Star"} (${project.star_count})
             </button>
         </form>
-    ` : '';
+        ` : `<span style="font-size: 0.9rem; color: #292524; margin-right: 12px;">Star (${project.star_count})</span>`;
 
         const editHtml = isOwner
-            ? `<a href="${editUrl}" class="button button-secondary" style="box-sizing: border-box; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; font-size: 0.85rem; white-space: nowrap;">Edit</a>`
+            ? `<a href="${editUrl}" style="color: #b45309; text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-right: 12px;">Edit</a>`
             : '';
 
         const deleteHtml = isOwner
             ? `<form method="post" action="${deleteUrl}" style="display: inline; margin: 0;">
             {% csrf_token %}
-            <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus project ini?');" style="box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; font-size: 0.85rem; white-space: nowrap; cursor: pointer;">Hapus</button>
+            <button type="submit" onclick="return confirm('Yakin ingin menghapus project ini?');" style="background: none; border: none; outline: none; box-shadow: none; padding: 0; color: #991b1b; cursor: pointer; font-weight: 500; font-size: 0.9rem;">Delete</button>
         </form>`
             : '';
-
         const completeCardHtml = `
         ${imageHtml}
         <div style="margin-bottom: 0.5rem;">
