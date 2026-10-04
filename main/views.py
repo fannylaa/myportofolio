@@ -284,3 +284,46 @@ def create_project_ajax(request):
         )
 
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+def get_experiences_json(request):
+    query = request.GET.get("q", "").strip()
+    experiences = Experience.objects.all()
+
+    if query:
+        experiences = experiences.filter(title__icontains=query) | experiences.filter(description__icontains=query)
+
+    data = []
+    for exp in experiences:
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "title": exp.title,
+                "description": exp.description,
+                "category": exp.category,
+                "thumbnail": exp.thumbnail or "",
+                "started_at": exp.started_at.strftime("%Y-%m-%d %H:%M"),
+                "ended_at": exp.ended_at.strftime("%Y-%m-%d") if exp.ended_at else None,
+                "is_ongoing": exp.is_ongoing,
+                "status_text": exp.status_text,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan experience."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Experience berhasil ditambahkan.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

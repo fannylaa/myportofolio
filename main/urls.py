@@ -1,6 +1,6 @@
 from django.urls import path
 
-from main.views import show_main, show_experience, show_projects, create_project, edit_project, delete_project, show_experience, create_experience, edit_experience, delete_experience, show_json, show_json_by_id, register, login_user, logout_user, toggle_star, get_projects_json, create_project_ajax
+from main.views import show_main, show_experience, show_projects, create_project, edit_project, delete_project, show_experience, create_experience, edit_experience, delete_experience, show_json, show_json_by_id, register, login_user, logout_user, toggle_star, get_projects_json, create_project_ajax, get_experiences_json, create_experience_ajax
 
 app_name = "main"
 
@@ -17,6 +17,8 @@ urlpatterns = [
     path('experience/create/', create_experience, name='create_experience'),
     path('experience/edit/<str:id>/', edit_experience, name='edit_experience'),
     path('experience/delete/<str:id>/', delete_experience, name='delete_experience'),
+    path('experience/json/', get_experiences_json, name='get_experiences_json'),
+    path('experience/create-ajax/', create_experience_ajax, name='create_experience_ajax'),
     path('experience/json/', show_json, name='show_json'),
     path('experience/json/<str:id>/', show_json_by_id, name='show_json_by_id'),
     # path untuk tutorial 4, login logout
