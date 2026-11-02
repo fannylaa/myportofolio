@@ -86,6 +86,7 @@ def show_experience(request):
         'is_editor': is_editor,
         'experiences': experiences,
         "form": ExperienceForm(),
+        "edit_form": ExperienceForm(prefix="edit"),
     }
     return render(request, 'experience.html', context)
 
