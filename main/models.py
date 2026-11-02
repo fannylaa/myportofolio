@@ -38,6 +38,10 @@ class Experience(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     thumbnail = models.URLField(blank=True, null=True)
+    # Tugas 4/6: akun yang memberi star pada pengalaman ini
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_experiences", blank=True
+    )
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
