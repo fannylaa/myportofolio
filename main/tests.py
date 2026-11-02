@@ -52,21 +52,30 @@ class MainTest(TestCase):
         self.assertTrue(self.experience.is_ongoing)
 
     def test_experience_page(self):
+        # Sejak Tutorial 05 halaman ini memuat kartu lewat AJAX, jadi halaman
+        # HTML diuji kerangkanya dan datanya diuji lewat API DRF (Tugas 6).
         response = self.client.get(reverse("main:show_experience"))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Part-Time")
-        self.assertContains(response, "Sedang berlangsung")
+        self.assertContains(response, 'id="grid"')
+        self.assertContains(response, reverse("api:experience-list"))
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+        data = self.client.get(reverse("api:experience-list")).data
+        titles = [item["title"] for item in data]
+        self.assertIn(self.experience.title, titles)
+        item = next(i for i in data if i["id"] == str(self.experience.id))
+        self.assertEqual(item["description"], self.experience.description)
+        self.assertEqual(item["category_display"], "Part-Time")
+        self.assertEqual(item["status_text"], "Sedang berlangsung")
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
         response = self.client.get(reverse("main:show_experience"))
 
-        self.assertContains(response, "Belum ada pengalaman yang ditambahkan.")
+        self.assertContains(response, "Belum ada pengalaman yang ditambahkan")
+        self.assertEqual(self.client.get(reverse("api:experience-list")).data, [])
 
     def test_completed_experience(self):
         self.experience.ended_at = timezone.now()
@@ -86,16 +95,23 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "projects.html")
-        self.assertContains(response, self.project.title, html=True)
-        self.assertContains(response, self.project.description, html=True)
-        self.assertContains(response, self.project.project_url)
-        self.assertContains(response, self.project.technology, html=True)
+        self.assertContains(response, 'id="grid"')
+        self.assertContains(response, reverse("api:project-list"))
+
+        # Kartu dirender lewat AJAX, jadi datanya diperiksa di API
+        data = self.client.get(reverse("api:project-list")).data
+        item = next(i for i in data if i["id"] == self.project.id)
+        self.assertEqual(item["title"], self.project.title)
+        self.assertEqual(item["description"], self.project.description)
+        self.assertEqual(item["project_url"], self.project.project_url)
+        self.assertEqual(item["tech_stack"], self.project.technology)
 
     def test_empty_projects_page(self):
         Project.objects.all().delete()
         response = self.client.get(reverse("main:show_projects"))
 
-        self.assertContains(response, "Belum ada proyek yang ditambahkan.")
+        self.assertContains(response, "Belum ada proyek yang ditambahkan")
+        self.assertEqual(self.client.get(reverse("api:project-list")).data, [])
 
     def test_main_url_is_exist(self):
         response = self.client.get(reverse('main:show_main'))
@@ -112,19 +128,21 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, 'experience.html')
 
     def test_project_search_filter(self):
-        # Uji pencarian teknologi 'Django'
-        response = self.client.get(reverse('main:show_projects'), {'tech': 'Django'})
+        # Pencarian proyek kini lewat parameter ?title= pada API (Tutorial 07)
+        response = self.client.get(reverse('api:project-list'), {'title': 'Portofolio'})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Aplikasi Portofolio")
+        self.assertEqual([i['title'] for i in response.data], ["Aplikasi Portofolio"])
        
     def test_experience_search_filter(self):
-        # Uji pencarian pengalaman 'Intern'``
-        response = self.client.get(reverse('main:show_experience'), {'q': 'Intern'})
+        # Pencarian pengalaman kini lewat parameter ?q= pada API (Tugas 6)
+        response = self.client.get(reverse('api:experience-list'), {'q': 'Intern'})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Software Engineering Intern")
+        self.assertEqual([i['title'] for i in response.data], ["Software Engineering Intern"])
 
     def test_empty_search_result(self):
         # Uji pencarian yang tidak ada datanya memicu state kosong
-        response = self.client.get(reverse('main:show_projects'), {'tech': 'NonExistentTech'})
+        response = self.client.get(reverse('api:project-list'), {'title': 'NonExistentTech'})
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Belum ada proyek yang ditambahkan.")
+        self.assertEqual(response.data, [])
+        page = self.client.get(reverse('main:show_projects'))
+        self.assertContains(page, "Belum ada proyek yang ditambahkan")
